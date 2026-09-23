@@ -1,0 +1,49 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "incidents": {
+      ".read": true,
+      ".indexOn": ["status", "category", "created", "zone"],
+      "$incidentId": {
+        ".write": "auth != null && ((!data.exists() && newData.child('reporterUid').val() === auth.uid) || root.child('roles').child(auth.uid).child('role').val() === 'municipal' || (root.child('roles').child(auth.uid).child('role').val() === 'crew' && data.child('crew').val() === root.child('roles').child(auth.uid).child('crew').val() && newData.child('crew').val() === data.child('crew').val() && ((data.child('status').val() === 'Asignada' && newData.child('status').val() === 'En curso') || (data.child('status').val() === 'En curso' && newData.child('status').val() === 'Resuelta'))))"
+      }
+    },
+    "audit": {
+      "$incidentId": {
+        ".read": "auth != null && root.child('roles').child(auth.uid).child('role').val() === 'municipal'",
+        "$eventId": {
+          ".write": "auth != null && !data.exists() && newData.exists() && (root.child('roles').child(auth.uid).child('role').val() === 'municipal' || root.child('roles').child(auth.uid).child('role').val() === 'crew')"
+        }
+      }
+    },
+    "votes": {
+      "$incidentId": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid && !data.exists() && newData.exists()"
+        }
+      }
+    },
+    "follows": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "reviews": {
+      "$incidentId": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('roles').child(auth.uid).child('role').val() === 'municipal')",
+          ".write": "auth != null && auth.uid === $uid && root.child('incidents').child($incidentId).child('status').val() === 'Resuelta'"
+        }
+      }
+    }
+  }
+}

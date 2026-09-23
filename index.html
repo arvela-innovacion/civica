@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cívica · Incidencias urbanas</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="index.html">Cívica</a><nav><a href="mapa.html">Incidencias</a><a href="perfil.html">Mi perfil</a><a class="admin-link" href="ayuntamiento/index.html">Ayuntamiento</a><a href="cuadrilla.html">Cuadrilla</a><a href="mis-incidencias.html">Mis incidencias</a><a href="acceso.html">Acceso</a></nav></header>
+<main class="container">
+  <section class="hero">
+    <span class="eyebrow">Participación ciudadana</span>
+    <h1>¿Has visto algo que necesita arreglo?</h1>
+    <p>Comunícalo en menos de un minuto. Antes de crear una incidencia comprobaremos si alguien ya la ha reportado.</p>
+    <div class="actions"><a class="btn primary" href="reportar.html">Reportar incidencia</a><a class="btn" href="mapa.html">Ver incidencias abiertas</a></div>
+  </section>
+  <section class="stats" id="stats"></section>
+  <section><div class="section-head"><div><span class="eyebrow">Cerca de ti</span><h2>Incidencias recientes</h2></div><a href="mapa.html">Ver todas →</a></div><div id="incident-list" class="cards"></div></section>
+</main>
+<footer>Cívica v8 · Preparada para pruebas de flujo completo<p><a href="pruebas.html">🧪 Abrir modo de pruebas</a></p></footer>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="js/config.js"></script><script src="js/app.js"></script><script src="js/backend.js"></script><script src="js/home.js"></script>
+</body></html>

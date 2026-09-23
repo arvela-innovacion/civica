@@ -1,0 +1,20 @@
+const id=new URLSearchParams(location.search).get("id"),el=document.querySelector("#detail");load();
+async function load(){
+  const i=await Backend.incident(id);if(!i){el.innerHTML="<div class='panel'>Incidencia no encontrada.</div>";return}
+  const voted=await Backend.hasVoted(id),following=await Backend.isFollowing(id),p=App.priorityParts(i),hist=Array.isArray(i.history)?i.history:Object.values(i.history||{}),resolved=i.status==="Resuelta";
+  const resolutionEvent=hist.filter(h=>String(h.action||"").toLowerCase().includes("resuelt")||String(h.action||"").includes("→ Resuelta")).slice(-1)[0];
+  const duration=resolved&&resolutionEvent?humanDuration(new Date(i.created),new Date(resolutionEvent.at)):"";
+  el.innerHTML=`<span class="eyebrow">Incidencia #${App.esc(String(i.id))}</span><div class="title-status"><h1 class="detail-title">${App.esc(i.category)}</h1>${resolved?'<span class="resolved-badge">✓ RESUELTA</span>':""}</div>
+  <div class="panel"><p>${App.esc(i.description)}</p><div class="detail-grid"><p><strong>Estado</strong><br><span class="status">${App.esc(i.status)}</span></p><p><strong>Prioridad orientativa</strong><br>${p.total}/100</p><p><strong>Confirmaciones</strong><br>+${i.votes}</p><p><strong>Ubicación</strong><br>${i.address?App.esc(i.address)+"<br>":""}${i.lat.toFixed(5)}, ${i.lng.toFixed(5)}</p></div>
+  <div class="actions">${!resolved?`<button id="vote" class="btn primary" ${voted?"disabled":""}>${voted?"✓ Tú también lo has confirmado":"+1 · Yo también lo he visto"}</button>`:""}<button id="follow" class="btn">${following?"🔔 Siguiendo":"🔔 Seguir incidencia"}</button></div></div>
+  ${resolved?`<section class="result-section"><span class="eyebrow">Resultado</span><h2>Antes y después</h2><div class="before-after"><figure>${i.photo?`<img src="${i.photo}" alt="Antes">`:"<div class='no-photo'>Sin foto inicial</div>"}<figcaption>ANTES</figcaption></figure><figure>${i.resolutionPhoto?`<img src="${i.resolutionPhoto}" alt="Después">`:"<div class='no-photo'>Sin foto final</div>"}<figcaption>DESPUÉS</figcaption></figure></div><div class="resolution-summary"><strong>${App.esc(i.resolutionNote||"Incidencia resuelta.")}</strong>${duration?`<span>Tiempo hasta resolución: ${duration}</span>`:""}<span>${i.votes} confirmaciones ciudadanas</span></div>
+  <div class="resolution-review"><h3>¿Está realmente solucionado?</h3><p>Tu valoración ayuda a comprobar la calidad de la resolución.</p><div class="actions"><button id="confirm-resolved" class="btn">✓ Sí, está resuelto</button><button id="request-review" class="btn">Sigue habiendo un problema</button></div><div id="review-feedback" class="form-feedback"></div></div></section>`:""}
+  <section class="timeline-section"><span class="eyebrow">Seguimiento</span><h2>Historial</h2><div class="timeline">${hist.slice().reverse().map(h=>`<div class="timeline-item"><i></i><div><strong>${App.esc(h.action)}</strong><p>${App.esc(h.by)} · ${new Date(h.at).toLocaleString("es-ES")}</p></div></div>`).join("")}</div></section>`;
+  const v=document.querySelector("#vote"),f=document.querySelector("#follow"),ok=document.querySelector("#confirm-resolved"),review=document.querySelector("#request-review");
+  if(v)v.onclick=async()=>{try{await Backend.vote(id);await load()}catch(e){alert(e.message)}};
+  if(f)f.onclick=async()=>{await Backend.follow(id,!following);await load()};
+  if(ok)ok.onclick=()=>sendReview("confirmed");
+  if(review)review.onclick=()=>sendReview("review_requested");
+}
+async function sendReview(value){try{await Backend.submitResolutionFeedback(id,value);document.querySelector("#review-feedback").textContent=value==="confirmed"?"Gracias por confirmarlo.":"Solicitud de revisión enviada al Ayuntamiento."}catch(e){document.querySelector("#review-feedback").textContent="⚠ "+e.message}}
+function humanDuration(a,b){const h=Math.max(0,Math.round((b-a)/36e5));return h<24?`${h} h`:`${Math.floor(h/24)} d ${h%24} h`}
