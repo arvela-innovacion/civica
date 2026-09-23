@@ -13,8 +13,8 @@ window.CIVICA_CONFIG = {
   },
 
   CLOUDINARY: {
-    cloudName: "TU_CLOUD_NAME",
-    uploadPreset: "TU_UPLOAD_PRESET"
+    cloudName: "jgomts0i",
+    uploadPreset: "civica_unsigned"
   },
 
   AUTH: {
