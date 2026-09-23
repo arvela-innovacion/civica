@@ -1,25 +1,25 @@
-// Cívica v6 — Firebase Realtime Database + Cloudinary.
-// Deja DEMO_MODE=true para probar sin configurar servicios.
 window.CIVICA_CONFIG = {
-  DEMO_MODE: true,
+  DEMO_MODE: false,
+
   FIREBASE: {
-    apiKey: "TU_FIREBASE_API_KEY",
-    authDomain: "TU-PROYECTO.firebaseapp.com",
-    databaseURL: "https://TU-PROYECTO-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "TU-PROYECTO",
-    appId: "TU_FIREBASE_APP_ID"
+    apiKey: "AIzaSyBOXV5G8JEjfyueB2A2-aOsFZ-bG1OOT3Y",
+    authDomain: "civica-arvela.firebaseapp.com",
+    databaseURL: "https://civica-arvela-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "civica-arvela",
+    storageBucket: "civica-arvela.firebasestorage.app",
+    messagingSenderId: "954466497463",
+    appId: "1:954466497463:web:410b4fda30cb8b73136e32",
+    measurementId: "G-KBKE928QDZ"
   },
-  AUTH: {
-    // Para una demo: activa Anonymous Authentication en Firebase.
-    // Añade aquí UIDs autorizados para operar como Ayuntamiento.
-    MUNICIPAL_UIDS: [],
-    // Formato: { "firebase-uid": "Viales 2" }
-    CREW_UIDS: {},
-    // En DEMO_MODE se puede cambiar de rol desde acceso.html.
-    DEMO_DEFAULT_ROLE: "citizen"
-  },
+
   CLOUDINARY: {
     cloudName: "TU_CLOUD_NAME",
-    uploadPreset: "TU_UNSIGNED_UPLOAD_PRESET"
+    uploadPreset: "TU_UPLOAD_PRESET"
+  },
+
+  AUTH: {
+    MUNICIPAL_UIDS: [],
+    CREW_UIDS: {},
+    DEMO_DEFAULT_ROLE: "citizen"
   }
 };
